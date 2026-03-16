@@ -1,9 +1,26 @@
+aid: hami
 name: HAMI
-description: A platform or tool (insufficient context to provide detailed description)
-url: null
+description: >-
+  HAMI (Heterogeneous AI Computing Virtualization Middleware) is an open-source
+  project that enables GPU virtualization and sharing for Kubernetes workloads,
+  allowing multiple AI containers to share GPU resources efficiently.
+url: https://raw.githubusercontent.com/api-evangelist/hami/refs/heads/main/apis.yml
+type: Index
+image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 tags:
-- Technology
+  - GPU Virtualization
+  - Kubernetes
+  - AI Computing
+  - CNCF
 created: '2025'
-modified: '2025'
+modified: '2026-03-16'
+specificationVersion: '0.19'
 apis: []
-common: []
+common:
+  - type: GitHub Organization
+    url: https://github.com/Project-HAMi/HAMi
+  - type: Documentation
+    url: https://project-hami.io/docs/
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com
