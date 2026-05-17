@@ -17,7 +17,7 @@ modified: '2026-04-28'
 specificationVersion: '0.19'
 apis: []
 common:
-  - type: GitHub Organization
+  - type: GitHubOrganization
     url: https://github.com/Project-HAMi/HAMi
   - type: Documentation
     url: https://project-hami.io/docs/
