@@ -21,6 +21,8 @@ common:
     url: https://github.com/Project-HAMi/HAMi
   - type: Documentation
     url: https://project-hami.io/docs/
+  - url: https://project-hami.io/blog/rss.xml
+    type: Blog
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
