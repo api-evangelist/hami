@@ -25,7 +25,7 @@ tags:
   - Kubernetes
 created: '2025'
 modified: '2026-04-28'
-specificationVersion: '0.19'
+specificationVersion: '0.23'
 apis: []
 common:
   - type: GitHubOrganization
