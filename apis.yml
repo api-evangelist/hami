@@ -39,6 +39,8 @@ modified: '2026-04-28'
 specificationVersion: '0.23'
 apis: []
 common:
+  - type: Website
+    url: https://www.project-hami.io/
   - type: GitHubOrganization
     url: https://github.com/Project-HAMi/HAMi
   - type: Documentation
