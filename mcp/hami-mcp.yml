@@ -1,0 +1,81 @@
+generated: '2026-09-12'
+method: derived
+status: candidate
+source: >-
+  Derived from grpc/hami-webui-{card,node,container,monitor}.proto and
+  openapi/hami-website-discovery-openapi.json. Searched for a first-party server across the
+  Project-HAMi GitHub organization (23 repositories), the documentation site and sitemap (1,059 URLs),
+  the changelog and the blog — none exists.
+note: >-
+  NO MCP SERVER IS PUBLISHED BY HAMi. Nothing below is callable today; this is a candidate tool list
+  showing what an MCP server over HAMi's existing read-only API surface would expose, and it is pointed
+  at from apis.yml as X-MCPServerCandidate rather than MCPServer so it can never be mistaken for a live
+  agent surface. Note the direction HAMi has actually taken instead: it publishes Agent Skills (three
+  of them — see skills/_index.yml) and an Agent Skills discovery index at
+  https://project-hami.io/.well-known/agent-skills/index.json, which is a kubectl/Prometheus-driven
+  agent story rather than a hosted-tool one. The one agent integration in the project's own blog,
+  kagent (https://project-hami.io/blog/kagent-hami-ai-agent-gpu-virtualization), is third-party and
+  drives HAMi through Kubernetes CRDs, not through an MCP endpoint.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: none
+  verified: searched
+searched:
+  - {surface: "github.com/Project-HAMi (23 repositories)", result: no MCP server repository or directory}
+  - {surface: "https://project-hami.io/sitemap.xml (1,059 URLs)", result: no MCP page}
+  - {surface: "https://project-hami.io/.well-known/api-catalog", result: declares service-desc, service-doc and status only — no MCP link}
+  - {surface: "https://project-hami.io/.well-known/agent-skills/index.json", result: Agent Skills, not MCP}
+  - {surface: "https://project-hami.io/changelog + blog", result: no MCP announcement}
+candidate_tools:
+  - name: list_gpus
+    backing: HAMi WebUI API — Card.GetAllGPUs (POST /v1/gpus)
+    description: List accelerators, optionally filtered by uid, type, node name or provider.
+    read_only: true
+  - name: list_gpu_types
+    backing: HAMi WebUI API — Card.GetAllGPUTypes (POST /v1/gpu-types)
+    description: List the accelerator types present in the cluster.
+    read_only: true
+  - name: get_gpu
+    backing: HAMi WebUI API — Card.GetGPU (GET /v1/gpu)
+    description: Get one accelerator's vGPU, core, memory and health detail by uid.
+    read_only: true
+  - name: list_nodes
+    backing: HAMi WebUI API — Node.GetAllNodes (POST /v1/nodes)
+    description: List cluster nodes, optionally filtered by ip, accelerator type or schedulability.
+    read_only: true
+  - name: get_node
+    backing: HAMi WebUI API — Node.GetNode (GET /v1/node)
+    description: Get one node's accelerator inventory and Kubernetes version detail by uid.
+    read_only: true
+  - name: get_cluster_summary
+    backing: HAMi WebUI API — Node.GetSummary (POST /v1/summary)
+    description: Cluster-wide vGPU, core and memory used/total rollup, optionally filtered.
+    read_only: true
+  - name: list_workloads
+    backing: HAMi WebUI API — Container.GetAllContainers (POST /v1/containers)
+    description: List GPU-consuming workloads with filters and page-number pagination.
+    read_only: true
+  - name: get_workload
+    backing: HAMi WebUI API — Container.GetContainer (GET /v1/container)
+    description: Get one workload's allocation and Pod status detail.
+    read_only: true
+  - name: query_metrics_range
+    backing: HAMi WebUI API — Monitor.QueryRange (POST /v1/monitor/query/range-vector)
+    description: Run a PromQL range query against the configured Prometheus.
+    read_only: true
+  - name: query_metrics_instant
+    backing: HAMi WebUI API — Monitor.QueryInstant (POST /v1/monitor/query/instant-vector)
+    description: Run a PromQL instant query against the configured Prometheus.
+    read_only: true
+  - name: get_usage_summary
+    backing: HAMi WebUI API — Monitor.Summary (POST /v1/monitor/summary)
+    description: Resource usage summary over the monitoring backend.
+    read_only: true
+coverage:
+  candidate_tools: 11
+  backing_rpcs: 11
+  write_tools: 0
+  note: The entire published surface is read-only, so every candidate tool is a read.

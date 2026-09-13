@@ -1,0 +1,113 @@
+generated: '2026-09-12'
+method: derived
+source: >-
+  grpc/hami-webui-{card,node,container,monitor,error}.proto,
+  openapi/hami-website-discovery-openapi.json,
+  https://github.com/Project-HAMi/HAMi-WebUI/blob/main/server/config/config.yaml,
+  https://project-hami.io/docs/developers/protocol
+note: >-
+  Cross-cutting semantics derived from the contracts in this repository, cross-linked to
+  authentication/, errors/, lifecycle/ and rate-limits/. The single most consequential fact about this
+  API is that it is entirely READ-ONLY: all eleven RPCs in the HAMi WebUI contract are Get*/Query*
+  reads, and all four operations in the website discovery OpenAPI are GETs. POST appears on seven of
+  the eleven RPCs only as a transport for a filter body, not as a mutation. HAMi does mutate cluster
+  state — it patches node and Pod annotations as scheduler and device plugin — but that happens over
+  the Kubernetes API as a controller, not through any API HAMi publishes for callers.
+auth:
+  style: none
+  detail: See authentication/hami-authentication.yml — access is network-scoped, delegated to Kubernetes.
+versioning:
+  style: path
+  detail: REST paths are prefixed /v1; the proto package is api.v1. One version has ever been published.
+  cross_ref: lifecycle/hami-lifecycle.yml
+transport:
+  protocols:
+    - gRPC (proto3) on :9000
+    - REST/JSON via grpc-gateway on :8000, transcoded by google.api.http annotations
+  detail: >-
+    Each RPC declares its own HTTP binding. List/filter operations bind POST with `body: "*"` so the
+    filter object travels in the body; single-item reads bind GET with query parameters
+    (GET /v1/gpu?uid=, GET /v1/node?uid=, GET /v1/container?name=&pod_uid=&device_id=).
+pagination:
+  style: page-number
+  coverage: partial
+  detail: >-
+    Only GetAllContainers (POST /v1/containers) accepts pagination. Its PageSize message carries
+    pageSize, pageNo, sort and sortField. The other list operations — GetAllGPUs, GetAllGPUTypes,
+    GetAllNodes — take filters but no page or cursor argument and return the full list.
+  params:
+    - pageSize
+    - pageNo
+    - sort
+    - sortField
+  response_fields:
+    - detail: >-
+        No total-count or next-page field is returned. ContainersReply carries only `items`, and the
+        other list replies carry `list`, so a caller cannot tell from the response whether more rows
+        exist.
+filtering:
+  style: nested filter object
+  detail: >-
+    Every list operation takes a `filters` message whose empty string members mean "match all" —
+    Card.filters {uid, type, node_name, provider}, Node.filters {ip, type, is_schedulable},
+    Container.filters {name, node_name, status, device_id, node_uid, resource_group, priority}.
+    The container `status` filter has a documented special value: "abnormal" matches error, not_ready
+    and failed, while any other value matches an exact ContainerReply.status.
+field_selection:
+  supported: false
+  detail: No sparse fieldsets, no expansion parameter, no field mask on any read.
+tri_state_fields:
+  supported: true
+  detail: >-
+    A deliberate and unusual convention worth naming: several numeric fields are paired with an
+    `optional bool *_known` companion (core_used_known on GPUReply, NodeReply and DeviceSummaryReply;
+    allocated_cores_known on ContainerReply) and ContainerStatusDetail uses proto3 `optional` on ready,
+    exit_code and last_exit_code. The contract comments the intent — "Optional values distinguish
+    false/zero from unavailable" — so a consumer can tell "zero cores used" from "utilization could not
+    be read", instead of silently charting a missing telemetry read as idle.
+metadata:
+  supported: false
+  detail: No user-supplied metadata or tagging surface; all entities are projections of live cluster state.
+request_id:
+  supported: unknown
+  detail: >-
+    No request-id or trace header is declared in the contract or the shipped config. go-kratos can emit
+    tracing middleware, but nothing in the published artifacts states that it is enabled.
+error_envelope:
+  format: kratos-errors
+  rfc9457: false
+  fields: [code, reason, message, metadata]
+  cross_ref: errors/hami-problem-types.yml
+rate_limit_signalling:
+  headers: []
+  detail: None published or observed.
+  cross_ref: rate-limits/hami-rate-limits.yml
+idempotency:
+  coverage: na
+  applicable: false
+  mechanism: none
+  scope: []
+  detail: >-
+    `na` rather than `none`: there is no mutating surface for an idempotency mechanism to protect.
+    All 11 HAMi WebUI RPCs and all 4 website discovery operations are reads, so every published
+    operation is already naturally idempotent and no Idempotency-Key header, request-id dedup or
+    replay window exists or is needed. No Idempotency pointer is emitted in apis.yml for this reason —
+    asserting one would credit HAMi with a safeguard it has no occasion to ship.
+reversibility:
+  grade: na
+  applicable: false
+  write_surfaces: []
+  detail: >-
+    `na` for the same reason as idempotency: the published API cannot change anything, so there is
+    nothing to reverse. No cancel, refund, void, undo, rollback or restore operation exists in the
+    contract, and none should. The state HAMi does change — node annotations
+    (hami.io/node-handshake-*, hami.io/node-*-register) and Pod allocation annotations — is written by
+    the scheduler and device plugin through the Kubernetes API as a controller reconciliation loop, and
+    the reversal semantics there are Kubernetes' own (delete the Pod, the allocation is released), not
+    an operation HAMi exposes to a caller. See https://project-hami.io/docs/developers/protocol.
+dry_run:
+  supported: na
+  detail: >-
+    No dry-run parameter exists, and with a read-only published surface none is needed. The project does
+    use the term internally — docs/develop/dry-run-filter-design.md in the HAMi repository describes a
+    scheduler filter design — but that is an internal scheduling concern, not a caller-facing mode.

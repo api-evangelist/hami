@@ -1,0 +1,57 @@
+generated: '2026-09-12'
+method: derived
+source: >-
+  grpc/hami-webui-error.proto (verbatim from
+  https://github.com/Project-HAMi/HAMi-WebUI/blob/main/server/api/v1/error.proto) and the Kratos errors
+  extension it imports.
+note: >-
+  Derived from the contract, not from a docs error reference — HAMi publishes no prose error reference
+  page, so titles below are the enum reason names and the remediation column is left empty rather than
+  invented. The envelope is NOT RFC 9457 problem+json: the HAMi WebUI backend is a go-kratos service
+  whose error extension (errors/errors.proto) attaches a numeric HTTP status to each enum member and
+  serializes a JSON body carrying `code`, `reason`, `message` and `metadata`. The numeric codes 521-525
+  are non-standard, application-assigned values in the 5xx range and are what the transport actually
+  returns.
+format: kratos-errors
+rfc9457: false
+content_type: application/json
+envelope:
+  code: HTTP status code carried by the errors.code option on the enum member
+  reason: The enum member name, e.g. NOT_FOUND_ERROR
+  message: Human-readable detail
+  metadata: Optional key/value map
+default_code: 500
+default_code_source: option (errors.default_code) = 500 in grpc/hami-webui-error.proto
+problem_types:
+  - reason: NOT_FOUND_ERROR
+    code: 521
+    enum_value: 0
+    title: Requested resource not found
+    surface: HAMi WebUI API
+  - reason: TRANSFORM_ERROR
+    code: 522
+    enum_value: 1
+    title: Response transformation failed
+    surface: HAMi WebUI API
+  - reason: VGPU_DOMAIN_ERROR
+    code: 523
+    enum_value: 2
+    title: vGPU domain error
+    surface: HAMi WebUI API
+  - reason: VGPU_STATUS_VALIDATE_ERROR
+    code: 524
+    enum_value: 3
+    title: vGPU status validation failed
+    surface: HAMi WebUI API
+  - reason: PARAMS_VALIDATOR_ERROR
+    code: 525
+    enum_value: 4
+    title: Request parameter validation failed
+    surface: HAMi WebUI API
+gaps:
+  - >-
+    No published error reference page maps these reasons to operator remediation, and the .proto
+    carries no comments on the enum members.
+  - >-
+    The website discovery OpenAPI (openapi/hami-website-discovery-openapi.json) declares only 200
+    responses on all four paths; no 4xx or 5xx response is described.

@@ -1,0 +1,73 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enrichment overlay — HAMi Website Discovery API
+  version: 1.0.0
+x-provenance:
+  generated: '2026-09-12'
+  method: generated
+  extends: openapi/hami-website-discovery-openapi.json
+  source: >-
+    Enhancements derived from artifacts in this repository — well-known/hami-well-known.yml,
+    skills/_index.yml, conformance/hami-conformance.yml, authentication/hami-authentication.yml and
+    conventions/hami-conventions.yml. The original spec at
+    https://project-hami.io/.well-known/openapi.json is never mutated; everything here is additive.
+  note: >-
+    HAMi's own spec is deliberately minimal — four paths, 200-only, no tags, no operationIds. This
+    overlay adds operationIds, tags, and the observed media types so the document is usable by
+    tooling that keys on them, and annotates each path with what the document behind it actually is.
+actions:
+  - target: $.info
+    update:
+      x-api-evangelist-profile: https://apis.io/provider/hami
+      x-contact-note: >-
+        Discovery surface of the HAMi documentation website, not the HAMi WebUI API. The HAMi WebUI
+        API is a separate, self-hosted gRPC/grpc-gateway contract; see grpc/ in this repository.
+  - target: $.paths['/robots.txt'].get
+    update:
+      operationId: getRobotsTxt
+      tags: [discovery]
+      x-content-signal: 'ai-train=no, search=yes, ai-input=yes'
+      x-content-signal-note: >-
+        Observed 2026-09-12. Repeated for ten named AI crawler user-agents (GPTBot, OAI-SearchBot,
+        Claude-Web, anthropic-ai, Google-Extended, Amazonbot, Bytespider, CCBot, Applebot-Extended)
+        and the wildcard agent. /search and any query-string URL are disallowed.
+  - target: $.paths['/.well-known/api-catalog'].get
+    update:
+      operationId: getApiCatalog
+      tags: [discovery]
+      x-standard: RFC 9727
+      x-observed-content-type: application/linkset+json
+      x-declares:
+        service-desc: https://project-hami.io/.well-known/openapi.json
+        service-doc: https://project-hami.io/docs
+        status: https://project-hami.io/.well-known/site-status.json
+  - target: $.paths['/.well-known/agent-skills/index.json'].get
+    update:
+      operationId: getAgentSkillsIndex
+      tags: [agents]
+      x-schema: https://schemas.agentskills.io/discovery/0.2.0/schema.json
+      x-skills:
+        - name: hami-docs
+          url: https://project-hami.io/.well-known/agent-skills/hami-docs/SKILL.md
+          digest: sha256:412deb896b3f005e65c4aafeb8c2d37dbb7c188b4100f4bb3020b53905fec7a3
+  - target: $.paths['/.well-known/site-status.json'].get
+    update:
+      operationId: getSiteStatus
+      tags: [discovery]
+      x-status-note: >-
+        Static site metadata ({"status":"ok","service":"HAMi documentation website"}), not a live
+        operational status page. Do not treat a 200 here as evidence that a HAMi deployment is healthy.
+  - target: $
+    update:
+      x-authentication:
+        scheme: none
+        note: >-
+          Public static documents. The site's own /.well-known/oauth-protected-resource declares an
+          empty authorization_servers[] and scopes_supported[].
+      x-not-described:
+        - >-
+          /.well-known/oauth-protected-resource is served (HTTP 200) but is not listed in this spec's
+          paths — the catalog and the spec disagree by one document.
+        - >-
+          /sitemap.xml, /blog/rss.xml, /blog/atom.xml, /changelog/rss.xml and /changelog/atom.xml are
+          all served and machine-readable but not described here.

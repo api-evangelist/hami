@@ -1,0 +1,63 @@
+generated: '2026-09-12'
+method: searched
+source: >-
+  grpc/hami-webui-*.proto, https://github.com/Project-HAMi/HAMi-WebUI/blob/main/charts/hami-webui/values.yaml,
+  https://github.com/Project-HAMi/HAMi-WebUI/blob/main/server/internal/conf/conf.proto,
+  https://project-hami.io/docs/installation/webui-installation,
+  https://project-hami.io/.well-known/oauth-protected-resource,
+  openapi/hami-website-discovery-openapi.json
+docs: https://project-hami.io/docs/installation/webui-installation
+note: >-
+  Neither published HAMi API surface authenticates its callers, and that is a finding rather than a gap
+  in our research. The HAMi WebUI contract declares no security scheme in any of its five .proto files
+  and no auth interceptor is configured in the shipped server config; the documented access pattern is
+  `kubectl port-forward service/my-hami-webui 3000:3000` with the docs stating plainly that "HAMi WebUI
+  is exposed via localhost only". Access control is therefore delegated entirely to Kubernetes — RBAC
+  on the port-forward, network policy, and whatever the operator puts in front of the optional Ingress.
+  The `authorization` and `basicAuth` settings in the Helm values are OUTBOUND credentials the WebUI
+  uses when scraping the operator's Prometheus, not inbound API authentication; conf.proto places both
+  inside the `Prometheus` message, and the older flat `auth` field there is marked deprecated. The
+  website discovery API is anonymous static content and says so: its own
+  /.well-known/oauth-protected-resource returns an empty authorization_servers[] and scopes_supported[].
+security_schemes: []
+surfaces:
+  - api: HAMi WebUI API
+    authentication: none
+    model: network-scoped
+    enforcement: >-
+      Kubernetes RBAC on `kubectl port-forward`, cluster network policy, and any authenticating proxy
+      the operator places in front of the optional Ingress. Nothing in the shipped artifact
+      authenticates a request that reaches the backend.
+    transport: >-
+      HTTP on 0.0.0.0:8000 and gRPC on 0.0.0.0:9000 inside the pod; the Helm service publishes port
+      3000. TLS is not terminated by the application.
+    evidence:
+      - https://github.com/Project-HAMi/HAMi-WebUI/blob/main/server/config/config.yaml
+      - https://project-hami.io/docs/installation/webui-installation
+  - api: HAMi Website Discovery API
+    authentication: none
+    model: public
+    enforcement: Public static documents served over TLS 1.3 by Netlify with HSTS max-age 31536000.
+    evidence:
+      - https://project-hami.io/.well-known/oauth-protected-resource
+      - openapi/hami-website-discovery-openapi.json
+outbound_credentials:
+  - name: Prometheus authorization
+    where: Helm values `externalPrometheus`/`prometheus.authorization` -> conf.proto Prometheus.authorization
+    type: HTTP Authorization header credential mounted from a Kubernetes Secret
+    direction: outbound (WebUI -> operator's Prometheus)
+  - name: Prometheus basic auth
+    where: Helm values `prometheus.basicAuth` -> conf.proto Prometheus.basic_auth
+    type: username/password mounted from a Kubernetes Secret, mutually exclusive with authorization
+    direction: outbound (WebUI -> operator's Prometheus)
+  - name: Prometheus TLS trust material
+    where: conf.proto Prometheus.tls
+    type: CA / client certificate mounted from a Kubernetes Secret
+    direction: outbound (WebUI -> operator's Prometheus)
+deprecated:
+  - field: Prometheus.auth
+    note: Marked `[deprecated = true]` in conf.proto — "use authorization or basic_auth with credentials mounted from files".
+oauth: false
+oidc: false
+mtls: false
+api_keys: false

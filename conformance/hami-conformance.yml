@@ -1,0 +1,138 @@
+generated: '2026-09-12'
+method: searched
+source: >-
+  Live probes of https://project-hami.io (api-catalog, openapi.json, oauth-protected-resource,
+  agent-skills index, robots.txt), the .proto contracts in https://github.com/Project-HAMi/HAMi-WebUI,
+  and https://github.com/Project-HAMi/HAMi (SECURITY-INSIGHTS.yml, SECURITY.md, docs/).
+note: >-
+  Every entry below is evidenced by a document that was fetched, or by a specific line in a contract in
+  this repository. Where HAMi does not implement something, `conforms: false` is recorded rather than
+  omitted — an honest negative is data. No certification claim is made: HAMi publishes no SOC 2, ISO
+  27001, PCI, HIPAA or FedRAMP attestation and no trust center, which is expected for an Apache-2.0
+  CNCF project, so no Compliance pointer is emitted for it.
+conformance:
+  - id: rfc9727-api-catalog
+    name: RFC 9727 — API Catalog (.well-known/api-catalog)
+    conforms: true
+    evidence: >-
+      https://project-hami.io/.well-known/api-catalog returns HTTP 200 with
+      Content-Type application/linkset+json and a linkset[] carrying anchor, service-desc, service-doc
+      and status link relations.
+  - id: openapi-3-1
+    name: OpenAPI 3.1.0
+    conforms: true
+    evidence: >-
+      https://project-hami.io/.well-known/openapi.json parses as OpenAPI 3.1.0 with info, servers and
+      four paths. Saved verbatim to openapi/hami-website-discovery-openapi.json.
+  - id: rfc9728-oauth-protected-resource
+    name: RFC 9728 — OAuth 2.0 Protected Resource Metadata
+    conforms: partial
+    evidence: >-
+      https://project-hami.io/.well-known/oauth-protected-resource returns HTTP 200 with a `resource`
+      member, but declares an empty authorization_servers[] and scopes_supported[], i.e. it advertises
+      the resource as public rather than describing an authorization server.
+  - id: agent-skills-discovery-0-2-0
+    name: Agent Skills discovery 0.2.0
+    conforms: true
+    evidence: >-
+      https://project-hami.io/.well-known/agent-skills/index.json declares
+      $schema https://schemas.agentskills.io/discovery/0.2.0/schema.json and a skills[] entry with
+      name, type skill-md, description, url and a sha256 digest.
+  - id: content-signal-robots
+    name: Content-Signal directives in robots.txt
+    conforms: true
+    evidence: >-
+      https://project-hami.io/robots.txt carries `Content-Signal: ai-train=no, search=yes, ai-input=yes`
+      repeated for ten named AI crawler user-agents (GPTBot, OAI-SearchBot, Claude-Web, anthropic-ai,
+      Google-Extended, Amazonbot, Bytespider, CCBot, Applebot-Extended and the wildcard agent).
+  - id: openssf-security-insights-2-0
+    name: OpenSSF Security Insights 2.0.0
+    conforms: true
+    evidence: >-
+      https://github.com/Project-HAMi/HAMi/blob/master/SECURITY-INSIGHTS.yml declares
+      header.schema-version 2.0.0, last-reviewed 2026-07-22, project administrators, repositories,
+      vulnerability-reporting, license and a security.tools inventory (Dependabot SCA, CodeQL SAST,
+      GitHub secret scanning). Saved verbatim to security/hami-security-insights.yml.
+  - id: proto3-grpc
+    name: Protocol Buffers 3 / gRPC service definitions
+    conforms: true
+    evidence: >-
+      grpc/hami-webui-{card,node,container,monitor,error}.proto declare `syntax = "proto3"`,
+      package api.v1, and four services (Card, Node, Container, Monitor) totalling 11 RPCs.
+  - id: grpc-gateway-http-mapping
+    name: google.api.http transcoding annotations (grpc-gateway)
+    conforms: true
+    evidence: >-
+      Every RPC in the HAMi WebUI contract carries an `option (google.api.http)` binding — for example
+      `post: "/v1/gpus"` in grpc/hami-webui-card.proto — so the gRPC surface is transcoded to REST.
+  - id: protoc-gen-openapiv2
+    name: grpc-gateway OpenAPI v2 generation annotations
+    conforms: true
+    evidence: >-
+      Each RPC also carries
+      `option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation)` with a summary, so a
+      Swagger 2.0 document is generatable from the contract at build time. The project does not publish
+      the generated document; only the .proto source is distributed.
+  - id: rfc9457-problem-details
+    name: RFC 9457 — Problem Details for HTTP APIs
+    conforms: false
+    evidence: >-
+      The WebUI error contract (grpc/hami-webui-error.proto) uses the Kratos `errors` extension — an
+      enum of reasons carrying numeric HTTP codes (521-525, default 500) — not application/problem+json.
+  - id: oauth2
+    name: OAuth 2.0
+    conforms: false
+    evidence: >-
+      No authorization server metadata is published on any HAMi host
+      (/.well-known/oauth-authorization-server and /.well-known/openid-configuration both return 404),
+      and no .proto in the contract declares an OAuth flow.
+  - id: semver
+    name: Semantic Versioning
+    conforms: true
+    evidence: >-
+      Releases are tagged vMAJOR.MINOR.PATCH and indexed on https://project-hami.io/changelog
+      (v2.5.0 through v2.10.0); Helm chart versions track appVersion identically.
+domain_standards:
+  - id: kubernetes-device-plugin-api
+    name: Kubernetes Device Plugin API (kubelet device-plugin gRPC)
+    conforms: true
+    market: Kubernetes accelerator management
+    evidence: >-
+      https://project-hami.io/docs/developers/protocol documents HAMi implementing the device-plugin
+      Allocate path — "kubelet invokes the device plugin's Allocate method to mount the device" — and
+      the registration handshake it layers on top of node annotations. The project ships device plugins
+      for NVIDIA, Ascend, DCU, AMD, Biren and Volcano vGPU as separate first-party repositories.
+  - id: kubernetes-dra
+    name: Kubernetes Dynamic Resource Allocation (resource.k8s.io)
+    conforms: true
+    market: Kubernetes accelerator management
+    evidence: >-
+      DRA support shipped in v2.8.0 and reached general availability in v2.9.0
+      (https://project-hami.io/changelog/v2.8.0, https://project-hami.io/changelog/v2.9.0); the driver
+      is published as github.com/Project-HAMi/HAMi-DRA (v0.2.2) with installation documented at
+      https://project-hami.io/docs/installation/how-to-use-hami-dra.
+  - id: container-device-interface
+    name: Container Device Interface (CDI)
+    conforms: true
+    market: Kubernetes accelerator management
+    evidence: https://project-hami.io/docs/installation/configure-cdi documents configuring HAMi to expose devices through CDI.
+  - id: prometheus-exposition
+    name: Prometheus exposition format / PromQL
+    conforms: true
+    market: Observability
+    evidence: >-
+      vGPUmonitor exposes Prometheus metrics (https://project-hami.io/docs/developers/gpu-utilization-metrics,
+      which names the Device_utilization_* descriptors), and the HAMi WebUI Monitor service takes PromQL
+      `query` strings against range and instant vectors (grpc/hami-webui-monitor.proto), backed by a
+      configured Prometheus address.
+  - id: opencontainers-oci
+    name: OCI container images
+    conforms: true
+    market: Software distribution
+    evidence: Release images published to Docker Hub under the projecthami organization (68 tags on projecthami/hami).
+certifications: []
+certifications_note: >-
+  None published. HAMi is a CNCF Incubating project under Apache-2.0; its published assurance surface is
+  a security policy, an OpenSSF Security Insights declaration, a CNCF general technical review
+  (https://github.com/Project-HAMi/HAMi/blob/master/docs/general-technical-review.md) and a
+  version-specific audit report (docs/audit-report-v290.md) — not third-party certification.

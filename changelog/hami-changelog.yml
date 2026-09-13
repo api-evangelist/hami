@@ -1,0 +1,75 @@
+generated: '2026-09-12'
+method: searched
+source: https://project-hami.io/changelog (and its feed https://project-hami.io/changelog/rss.xml)
+docs: https://project-hami.io/changelog
+note: >-
+  HAMi runs a dedicated, dated changelog section on its documentation site with a per-release page and
+  both RSS and Atom feeds, separate from the project blog. Dates and version numbers below are read
+  from the feed; highlights are taken from the matching release announcement. Recent window only —
+  the site indexes ten releases from v2.5.0 (2025-02-06) forward.
+scheme: semver
+current_version: 2.10.0
+current_version_date: '2026-08-21'
+feeds:
+  - format: rss
+    url: https://project-hami.io/changelog/rss.xml
+    http_status: 200
+  - format: atom
+    url: https://project-hami.io/changelog/atom.xml
+entries:
+  - version: 2.10.0
+    date: '2026-08-21'
+    url: https://project-hami.io/changelog/v2.10.0
+    breaking: false
+    highlights:
+      - Dynamic Flexible MIG
+      - New mutex scheduling policy and composable scheduler policies with a NUMA-aware sort fix
+      - Gang scheduling (PodGroup) support
+      - AMD MI300X and Biren device support
+      - Heterogeneous Ascend vNPU / HAMi-core mode with monitoring
+      - KAI Scheduler + HAMi-core integration
+  - version: 2.9.0
+    date: '2026-05-09'
+    url: https://project-hami.io/changelog/v2.9.0
+    breaking: false
+    highlights:
+      - Ascend 910C HAMi-core mode (user-space partitioning)
+      - HAMi-DRA generally available
+      - Volcano vGPU upgraded to v0.19
+      - Observability, security and stability hardening
+  - version: 2.8.0
+    date: '2026-01-20'
+    url: https://project-hami.io/changelog/v2.8.0
+    breaking: false
+    highlights:
+      - Full Dynamic Resource Allocation (DRA) support
+      - High-availability scheduling
+      - Kubernetes native standard alignment
+  - version: 2.7.1
+    date: '2025-11-07'
+    url: https://project-hami.io/changelog/v2.7.1
+    breaking: false
+  - version: 2.7.0
+    date: '2025-09-26'
+    url: https://project-hami.io/changelog/v2.7.0
+    breaking: false
+  - version: 2.5.3
+    date: '2025-08-05'
+    url: https://project-hami.io/changelog/v2.5.3
+    breaking: false
+  - version: 2.6.0
+    date: '2025-06-07'
+    url: https://project-hami.io/changelog/v2.6.0
+    breaking: false
+  - version: 2.5.2
+    date: '2025-05-26'
+    url: https://project-hami.io/changelog/v2.5.2
+    breaking: false
+  - version: 2.5.1
+    date: '2025-05-06'
+    url: https://project-hami.io/changelog/v2.5.1
+    breaking: false
+  - version: 2.5.0
+    date: '2025-02-06'
+    url: https://project-hami.io/changelog/v2.5.0
+    breaking: false

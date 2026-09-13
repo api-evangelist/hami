@@ -1,0 +1,31 @@
+generated: '2026-09-12'
+method: searched
+source: >-
+  https://project-hami.io/docs/ (full docs tree via https://project-hami.io/sitemap.xml),
+  https://project-hami.io/docs/installation/webui-installation, and the HAMi WebUI server config at
+  https://github.com/Project-HAMi/HAMi-WebUI/blob/main/server/config/config.yaml
+note: >-
+  No rate limits are published and none are implementable as a vendor policy: both HAMi surfaces are
+  operator-run. The HAMi WebUI API runs inside the customer's own Kubernetes cluster, so any throttling
+  is whatever that operator puts in front of it; the only timeouts declared in the shipped config are
+  server.http.timeout 60s, server.grpc.timeout 60s, prometheus.timeout 1m and exporter.timeout 60s,
+  which are request deadlines, not quotas. The HAMi Website Discovery API is four static documents on
+  Netlify's CDN with no published quota. No X-RateLimit-*, RateLimit-* or Retry-After header was
+  observed on any response fetched during this pass.
+limit_count: 0
+limits: []
+headers: []
+exhaustion_status: null
+timeouts:
+  - name: server.http.timeout
+    value: 60s
+    surface: HAMi WebUI API (REST)
+    source: https://github.com/Project-HAMi/HAMi-WebUI/blob/main/server/config/config.yaml
+  - name: server.grpc.timeout
+    value: 60s
+    surface: HAMi WebUI API (gRPC)
+    source: https://github.com/Project-HAMi/HAMi-WebUI/blob/main/server/config/config.yaml
+  - name: prometheus.timeout
+    value: 1m
+    surface: HAMi WebUI Monitor service upstream query
+    source: https://github.com/Project-HAMi/HAMi-WebUI/blob/main/server/config/config.yaml

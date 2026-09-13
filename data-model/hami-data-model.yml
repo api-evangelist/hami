@@ -1,0 +1,176 @@
+generated: '2026-09-12'
+method: derived
+source: >-
+  grpc/hami-webui-{card,node,container,monitor}.proto — message definitions and the id-reference fields
+  that link them.
+note: >-
+  Derived from the contract's message shapes and its id-reference fields. HAMi's WebUI API has no
+  $ref-style schema reuse to walk (proto messages are flat per service), so relationships below are
+  inferred from identifier fields that name another entity — node_uid, device_ids, pod_uid — each of
+  which is stated with the field that carries it. Every entity is a live projection of Kubernetes and
+  accelerator state; none is a stored record with a lifecycle of its own, which is why there are no
+  create/update timestamps beyond what Kubernetes supplies.
+entities:
+  - name: GPU
+    message: GPUReply
+    service: Card
+    identifier: uuid
+    also_identified_by: [uid (request parameter on GetGPU and the Card filter)]
+    operations: [GetAllGPUs, GetAllGPUTypes, GetGPU]
+    fields:
+      - {name: uuid, type: string, role: identifier}
+      - {name: node_name, type: string, role: reference}
+      - {name: node_uid, type: string, role: reference}
+      - {name: type, type: string, note: accelerator model, e.g. NVIDIA-Tesla V100-PCIE-32GB}
+      - {name: mode, type: string, note: sharing mode in force for the device}
+      - {name: health, type: bool}
+      - {name: vgpu_used, type: int32}
+      - {name: vgpu_total, type: int32}
+      - {name: core_used, type: int32}
+      - {name: core_total, type: int32}
+      - {name: memory_used, type: int32}
+      - {name: memory_total, type: int32}
+      - {name: core_used_known, type: optional bool, role: telemetry-availability flag}
+  - name: Node
+    message: NodeReply
+    service: Node
+    identifier: uid
+    operations: [GetAllNodes, GetNode]
+    fields:
+      - {name: uid, type: string, role: identifier}
+      - {name: name, type: string}
+      - {name: ip, type: string}
+      - {name: is_schedulable, type: bool}
+      - {name: is_ready, type: bool}
+      - {name: type, type: repeated string, note: accelerator types present on the node}
+      - {name: card_cnt, type: int32}
+      - {name: vgpu_used, type: int32}
+      - {name: vgpu_total, type: int32}
+      - {name: core_used, type: int32}
+      - {name: core_total, type: int32}
+      - {name: memory_used, type: int32}
+      - {name: memory_total, type: int32}
+      - {name: os_image, type: string}
+      - {name: operating_system, type: string}
+      - {name: kernel_version, type: string}
+      - {name: container_runtime_version, type: string}
+      - {name: kubelet_version, type: string}
+      - {name: kube_proxy_version, type: string}
+      - {name: architecture, type: string}
+      - {name: creation_timestamp, type: string}
+      - {name: core_used_known, type: optional bool, role: telemetry-availability flag}
+  - name: Container
+    message: ContainerReply
+    service: Container
+    identifier: pod_uid
+    also_identified_by: [name, device_id (GetContainer accepts any of the three)]
+    operations: [GetAllContainers, GetContainer]
+    fields:
+      - {name: pod_uid, type: string, role: identifier}
+      - {name: name, type: string}
+      - {name: namespace, type: string}
+      - {name: app_name, type: string}
+      - {name: status, type: string}
+      - {name: node_name, type: string}
+      - {name: node_uid, type: string, role: reference}
+      - {name: device_ids, type: repeated string, role: reference}
+      - {name: allocated_devices, type: int32}
+      - {name: allocated_cores, type: int32}
+      - {name: allocated_mem, type: int32}
+      - {name: allocated_cores_known, type: optional bool, role: telemetry-availability flag}
+      - {name: resource_pool, type: string}
+      - {name: flavor, type: string}
+      - {name: priority, type: string}
+      - {name: images, type: repeated string}
+      - {name: create_time, type: string}
+      - {name: start_time, type: string}
+      - {name: end_time, type: string}
+      - {name: status_detail, type: ContainerStatusDetail, role: embedded}
+  - name: ContainerStatusDetail
+    message: ContainerStatusDetail
+    service: Container
+    embedded_in: ContainerReply
+    note: >-
+      Pod-level truth kept deliberately separate from GPU telemetry — the contract comment says it is
+      "the current regular container and its Pod context, without inferring health from GPU telemetry".
+    fields:
+      - {name: container_state, type: string}
+      - {name: reason, type: string}
+      - {name: message, type: string}
+      - {name: ready, type: optional bool}
+      - {name: restart_count, type: int32}
+      - {name: exit_code, type: optional int32}
+      - {name: restart_pending, type: bool}
+      - {name: pod_phase, type: string}
+      - {name: pod_ready, type: string}
+      - {name: pod_ready_reason, type: string}
+      - {name: pod_ready_message, type: string}
+      - {name: pod_reason, type: string}
+      - {name: pod_message, type: string}
+      - {name: last_termination_reason, type: string}
+      - {name: last_exit_code, type: optional int32}
+      - {name: last_termination_message, type: string}
+  - name: DeviceSummary
+    message: DeviceSummaryReply
+    service: Node
+    identifier: null
+    note: A cluster-wide or filtered rollup, not an addressable record.
+    operations: [GetSummary]
+    fields:
+      - {name: gpu_count, type: int32}
+      - {name: node_count, type: int32}
+      - {name: vgpu_used, type: int32}
+      - {name: vgpu_total, type: int32}
+      - {name: core_used, type: int32}
+      - {name: core_total, type: int32}
+      - {name: memory_used, type: int32}
+      - {name: memory_total, type: int32}
+      - {name: core_used_known, type: optional bool, role: telemetry-availability flag}
+  - name: SampleStream
+    message: SampleStream
+    service: Monitor
+    note: >-
+      A Prometheus time series — a metric label map plus SamplePair values (value, timestamp, missing).
+      The `missing` flag is the time-series counterpart of the *_known convention elsewhere in the model.
+    operations: [QueryRange, QueryInstant, Summary]
+relationships:
+  - from: Node
+    to: GPU
+    type: has_many
+    via: GPUReply.node_uid -> NodeReply.uid (and GPUReply.node_name -> NodeReply.name)
+  - from: GPU
+    to: Node
+    type: belongs_to
+    via: GPUReply.node_uid
+  - from: Node
+    to: Container
+    type: has_many
+    via: ContainerReply.node_uid -> NodeReply.uid
+  - from: Container
+    to: Node
+    type: belongs_to
+    via: ContainerReply.node_uid
+  - from: Container
+    to: GPU
+    type: has_many
+    via: ContainerReply.device_ids -> GPUReply.uuid
+  - from: GPU
+    to: Container
+    type: has_many
+    via: GetAllContainersReq.Filters.device_id — workloads are looked up by the device they hold
+  - from: Container
+    to: ContainerStatusDetail
+    type: has_one
+    via: ContainerReply.status_detail
+  - from: DeviceSummary
+    to: GPU
+    type: aggregates
+    via: GetSummaryReq.Filters {type, node_uid, device_id}
+id_conventions:
+  - >-
+    Accelerator identifiers are vendor UUIDs carried through verbatim — GPU-<uuid> for NVIDIA,
+    MLU-<uuid> for Cambricon — as shown in the registration annotation examples at
+    https://project-hami.io/docs/developers/protocol.
+  - Node and Pod identifiers are Kubernetes UIDs, not HAMi-assigned identifiers.
+render: null
+render_note: No subway/ diagram exists in this repository for HAMi.

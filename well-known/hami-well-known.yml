@@ -1,0 +1,142 @@
+generated: '2026-09-12'
+method: probed
+source: >-
+  Direct HTTP probes of the named /.well-known/ path list (plus /apis.json, /apis.yml, /llms.txt)
+  against every host this record knows: the registrable domain project-hami.io, www.project-hami.io,
+  and the GitHub Pages host project-hami.github.io that serves the Helm chart repositories.
+note: >-
+  project-hami.io serves a REAL RFC 9727 API catalog (Content-Type application/linkset+json) that
+  declares a service-desc pointing at https://project-hami.io/.well-known/openapi.json — a first-party
+  OpenAPI 3.1.0 describing the website's own discovery endpoints — plus a service-doc at /docs and a
+  status document at /.well-known/site-status.json. It also serves an RFC 9728 OAuth protected-resource
+  document declaring the resource public (empty authorization_servers and scopes_supported). No
+  security.txt, no OpenID/OAuth authorization-server metadata, no ai-plugin.json, no UCP/ACP/AAuth
+  document, no apis.json and no llms.txt on any host. The site is served by Netlify; every miss below
+  returned the Docusaurus 404 HTML page, which is a miss, not a document.
+hosts:
+  - host: project-hami.io
+    documents:
+      - path: /.well-known/api-catalog
+        status: 200
+        file: hami-api-catalog.json
+        content_type: application/linkset+json
+      - path: /.well-known/oauth-protected-resource
+        status: 200
+        file: hami-oauth-protected-resource.json
+        content_type: application/json
+      - path: /.well-known/site-status.json
+        status: 200
+        file: hami-site-status.json
+        content_type: application/json
+        note: Declared as the `status` link of the api-catalog linkset. Static site metadata, not a live service status page.
+      - path: /.well-known/openapi.json
+        status: 200
+        file: ../openapi/hami-website-discovery-openapi.json
+        content_type: application/openapi+json
+        note: Declared as the api-catalog `service-desc`. Saved to openapi/ as the first-party contract.
+      - path: /.well-known/agent-skills/index.json
+        status: 200
+        file: ../skills/hami-agent-skills-index.json
+        content_type: application/json
+        note: Agent Skills discovery 0.2.0 index; the skill body is saved to skills/hami-docs.md.
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/ucp.json
+        status: 404
+      - path: /.well-known/acp.json
+        status: 404
+      - path: /.well-known/aauth-resource.json
+        status: 404
+      - path: /.well-known/apis.json
+        status: 404
+      - path: /apis.json
+        status: 404
+      - path: /apis.yml
+        status: 404
+      - path: /llms.txt
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+      - path: /robots.txt
+        status: 200
+        content_type: text/plain
+        note: >-
+          Carries a Content-Signal directive (ai-train=no, search=yes, ai-input=yes) repeated for ten
+          named AI crawler user-agents. Recorded as evidence, not saved as a separate file.
+  - host: www.project-hami.io
+    documents:
+      - path: /.well-known/api-catalog
+        status: 200
+        file: hami-api-catalog.json
+        content_type: application/linkset+json
+        note: Identical body to the apex host; the linkset anchors at https://project-hami.io/.well-known/.
+      - path: /.well-known/oauth-protected-resource
+        status: 200
+        file: hami-oauth-protected-resource.json
+        content_type: application/json
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/ucp.json
+        status: 404
+      - path: /.well-known/acp.json
+        status: 404
+      - path: /.well-known/aauth-resource.json
+        status: 404
+      - path: /.well-known/apis.json
+        status: 404
+      - path: /apis.json
+        status: 404
+      - path: /apis.yml
+        status: 404
+      - path: /llms.txt
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: project-hami.github.io
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/ucp.json
+        status: 404
+      - path: /.well-known/acp.json
+        status: 404
+      - path: /.well-known/aauth-resource.json
+        status: 404
+      - path: /.well-known/apis.json
+        status: 404
+      - path: /apis.json
+        status: 404
+      - path: /apis.yml
+        status: 404
+      - path: /llms.txt
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404

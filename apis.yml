@@ -1,11 +1,19 @@
 aid: hami
-name: HAMI
+name: HAMi
 description: >-
-  HAMI (Heterogeneous AI Computing Virtualization Middleware) is an open-source
-  project that enables GPU virtualization and sharing for Kubernetes workloads,
-  allowing multiple AI containers to share GPU resources efficiently.
+  HAMi (Heterogeneous AI Computing Virtualization Middleware) is a CNCF incubating open-source project
+  that brings device sharing, memory and core isolation, and topology-aware scheduling to heterogeneous
+  AI accelerators on Kubernetes. It lets several containers share one physical GPU or NPU with hard
+  memory limits and enforced compute quotas, across NVIDIA, Huawei Ascend, Cambricon MLU, Hygon DCU,
+  Enflame GCU, Iluvatar, Moore Threads, MetaX, Kunlunxin and Vastai devices. HAMi ships a scheduler, a
+  device plugin, an in-container enforcement library (HAMi-core/libvgpu), a DRA driver, and HAMi WebUI —
+  an observability dashboard whose backend exposes a gRPC and grpc-gateway REST API over cluster GPU,
+  node, workload and Prometheus-backed monitoring data. The project also publishes a machine-readable
+  discovery surface on its documentation site: an RFC 9727 API catalog, an OpenAPI 3.1 service
+  description, an Agent Skills discovery index, and Content-Signal directives in robots.txt.
 url: https://raw.githubusercontent.com/api-evangelist/hami/refs/heads/main/apis.yml
 type: Index
+position: Producing
 deliveryModel:
   model: unknown
   open_source: false
@@ -34,10 +42,69 @@ tags:
   - CNCF
   - GPU Virtualization
   - Kubernetes
-created: '2025'
-modified: '2026-04-28'
+  - GPU Sharing
+  - Scheduling
+  - Open Source
+  - Infrastructure
+  - Observability
+  - Heterogeneous Computing
+created: '2025-01-01'
+modified: '2026-09-12'
 specificationVersion: '0.23'
-apis: []
+apis:
+  - name: HAMi WebUI API
+    description: >-
+      The HAMi WebUI backend API. Four gRPC services — Card, Node, Container and Monitor — expose
+      cluster accelerator inventory, node inventory, GPU-consuming workloads and Prometheus-backed
+      range/instant/summary queries. Every RPC carries a google.api.http annotation, so the same
+      surface is served as REST through grpc-gateway under /v1 (for example POST /v1/gpus,
+      GET /v1/node, POST /v1/monitor/query/range-vector). The contract is the .proto set published in
+      the HAMi-WebUI repository and mirrored verbatim into grpc/ here.
+    humanURL: https://project-hami.io/docs/installation/webui-installation
+    baseURL: http://{hami-webui-host}:8000
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/hami.png
+    tags:
+      - GPU Virtualization
+      - Kubernetes
+      - Observability
+      - Monitoring
+    properties:
+      - type: Protobuf
+        url: grpc/hami-webui-card.proto
+      - type: Protobuf
+        url: grpc/hami-webui-node.proto
+      - type: Protobuf
+        url: grpc/hami-webui-container.proto
+      - type: Protobuf
+        url: grpc/hami-webui-monitor.proto
+      - type: Protobuf
+        url: grpc/hami-webui-error.proto
+      - type: SourceCode
+        url: https://github.com/Project-HAMi/HAMi-WebUI
+      - type: Documentation
+        url: https://project-hami.io/docs/installation/webui-installation
+  - name: HAMi Website Discovery API
+    description: >-
+      The machine-readable discovery surface of the HAMi documentation website, described by a
+      first-party OpenAPI 3.1.0 document that the site advertises as the service-desc of its RFC 9727
+      API catalog. Four anonymous GET endpoints — /robots.txt, /.well-known/api-catalog,
+      /.well-known/agent-skills/index.json and /.well-known/site-status.json — let an agent find the
+      project's content-usage signals, its API catalog, its published Agent Skills, and site status
+      without scraping HTML.
+    humanURL: https://project-hami.io/docs/
+    baseURL: https://project-hami.io
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/hami.png
+    tags:
+      - Discovery
+      - Agents
+      - Documentation
+    properties:
+      - type: OpenAPI
+        url: openapi/hami-website-discovery-openapi.json
+      - type: Overlay
+        url: overlays/hami-website-discovery-overlay.yaml
+      - type: WellKnown
+        url: well-known/hami-well-known.yml
 common:
   - type: Website
     url: https://www.project-hami.io/
@@ -47,6 +114,61 @@ common:
     url: https://project-hami.io/docs/
   - url: https://project-hami.io/blog/rss.xml
     type: Blog
+  - type: DeveloperPortal
+    url: https://project-hami.io/docs/category/developer-guide
+  - type: GettingStarted
+    url: https://project-hami.io/docs/get-started/deploy-with-helm
+  - type: Support
+    url: https://project-hami.io/community
+  - type: Roadmap
+    url: https://project-hami.io/docs/contributor/roadmap
+  - type: ChangeLog
+    url: https://project-hami.io/changelog
+  - type: TermsOfService
+    url: https://lfprojects.org/policies/terms-of-use/
+  - type: PrivacyPolicy
+    url: https://lfprojects.org/policies/privacy-policy/
+  - type: Security
+    url: https://github.com/Project-HAMi/HAMi/blob/master/SECURITY.md
+  - type: WellKnown
+    url: well-known/hami-well-known.yml
+  - type: AgentSkill
+    url: skills/_index.yml
+  - type: LLMsTxt
+    url: llms/hami-llms.txt
+  - type: Packages
+    url: packages/hami-packages.yml
+  - type: Conformance
+    url: conformance/hami-conformance.yml
+  - type: ErrorCatalog
+    url: errors/hami-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/hami-lifecycle.yml
+  - type: ChangeLog
+    url: changelog/hami-changelog.yml
+  - type: Conventions
+    url: conventions/hami-conventions.yml
+  - type: DataModel
+    url: data-model/hami-data-model.yml
+  - type: Authentication
+    url: authentication/hami-authentication.yml
+  - type: DomainSecurity
+    url: security/hami-domain-security.yml
+  - type: VulnerabilityDisclosure
+    url: security/hami-vulnerability-disclosure.yml
+  - type: X-SecurityInsights
+    url: security/hami-security-insights.yml
+  - type: RateLimits
+    url: rate-limits/hami-rate-limits.yml
+  - type: Plans
+    url: plans/hami-plans-pricing.yml
+  - type: X-MCPServerCandidate
+    url: mcp/hami-mcp.yml
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
+x-enrichment:
+  date: '2026-09-12'
+  status: enriched
+  artifacts_added: 31
+  pass: local-v3

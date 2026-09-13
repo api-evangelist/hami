@@ -1,0 +1,68 @@
+generated: '2026-09-12'
+method: searched
+source: >-
+  https://github.com/Project-HAMi/HAMi/blob/master/SECURITY.md,
+  https://github.com/Project-HAMi/HAMi/blob/master/SECURITY-INSIGHTS.yml,
+  https://project-hami.io/changelog, https://project-hami.io/docs/contributor/roadmap,
+  https://project-hami.io/docs/installation/upgrade
+note: >-
+  HAMi is self-hosted Kubernetes middleware, so its lifecycle is a release lifecycle, not a hosted-API
+  lifecycle. There is no public service status page and no Sunset/Deprecation HTTP header surface to
+  find, because there is no vendor-run endpoint to run one against — the operator runs the software in
+  their own cluster. What the project does publish, and what is recorded here, is a semantic-version
+  release train with a dated changelog, an explicit supported-versions window tied to security fixes,
+  a public roadmap, and an OpenSSF Security Insights declaration that the repository is active.
+versioning:
+  scheme: semver
+  current: 2.10.0
+  current_date: '2026-08-21'
+  api_versioning: >-
+    The HAMi WebUI API paths are prefixed /v1 and the proto package is api.v1; no second API version has
+    been published.
+  changelog: https://project-hami.io/changelog
+support_window:
+  source: https://github.com/Project-HAMi/HAMi/blob/master/SECURITY.md
+  policy: Security fixes are provided for the three most recent minor releases.
+  supported:
+    - version: 2.10.x
+      security_fixes: true
+    - version: 2.9.x
+      security_fixes: true
+    - version: 2.8.x
+      security_fixes: true
+  unsupported:
+    - version: before 2.8.0
+      security_fixes: false
+      note: No longer supported.
+deprecation:
+  policy_published: false
+  note: >-
+    No standalone deprecation or sunset policy document was found. The supported-versions table in
+    SECURITY.md is the only published end-of-support statement, and it is expressed as "no longer
+    supported" rather than as a dated deprecation schedule. Individual field-level deprecations do
+    exist in the contract — server/internal/conf/conf.proto marks Prometheus.auth `[deprecated = true]`
+    with a migration note pointing to `authorization` or `basic_auth` — but that is a code annotation,
+    not a policy.
+  deprecated_in_contract:
+    - field: Prometheus.auth
+      file: https://github.com/Project-HAMi/HAMi-WebUI/blob/main/server/internal/conf/conf.proto
+      replacement: Prometheus.authorization or Prometheus.basic_auth with credentials mounted from files
+status_page:
+  published: false
+  note: >-
+    https://project-hami.io/.well-known/site-status.json returns 200 with a static
+    {"status":"ok","service":"HAMi documentation website"} body and is declared as the `status` link of
+    the site's RFC 9727 api-catalog. It reports on the documentation website, is not dated, and does not
+    change, so it is recorded as a discovery document rather than claimed as an operational status page.
+sla:
+  published: false
+  note: Apache-2.0 open-source project with no commercial SLA. Security-report response target is ideally within 5 working days (SECURITY.md).
+maturity:
+  foundation: CNCF
+  level: Incubating
+  announced: '2026-07-02'
+  evidence: https://project-hami.io/blog/hami-cncf-incubating
+  license: Apache-2.0
+  repository_status: active
+  repository_status_source: https://github.com/Project-HAMi/HAMi/blob/master/SECURITY-INSIGHTS.yml
+roadmap: https://project-hami.io/docs/contributor/roadmap

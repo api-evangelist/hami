@@ -1,0 +1,18 @@
+generated: '2026-09-12'
+method: searched
+source: >-
+  https://project-hami.io/ and its full sitemap (https://project-hami.io/sitemap.xml, 1,059 URLs — no
+  /pricing, /plans, /signup or /login page exists), plus
+  https://github.com/Project-HAMi/HAMi/blob/master/LICENSE
+note: >-
+  HAMi has no plans because it has nothing to sell. It is an Apache-2.0 licensed CNCF Incubating
+  project distributed as Helm charts, Go modules and container images that the operator runs in their
+  own cluster; there is no hosted service, no account, no sign-up and no commercial tier — not an
+  enterprise "contact us" gate, but a genuine absence of a commercial surface. Commercial support for
+  HAMi is sold by third parties (notably dynamia.ai, which employs several maintainers); those are
+  vendor offerings, not HAMi plans, and are deliberately not recorded here as HAMi pricing.
+plan_count: 0
+plans: []
+pricing_page: null
+license: Apache-2.0
+license_url: https://github.com/Project-HAMi/HAMi/blob/master/LICENSE
