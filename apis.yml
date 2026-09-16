@@ -44,6 +44,17 @@ tags:
   - Kubernetes
   - GPU Sharing
   - Scheduling
+  - Open-Source
+  - Infrastructure
+  - Observability
+  - Heterogeneous Computing
+tags_raw:
+  - AI Computing
+  - CNCF
+  - GPU Virtualization
+  - Kubernetes
+  - GPU Sharing
+  - Scheduling
   - Open Source
   - Infrastructure
   - Observability
@@ -52,60 +63,64 @@ created: '2025-01-01'
 modified: '2026-09-12'
 specificationVersion: '0.23'
 apis:
-  - name: HAMi WebUI API
-    description: >-
-      The HAMi WebUI backend API. Four gRPC services — Card, Node, Container and Monitor — expose
-      cluster accelerator inventory, node inventory, GPU-consuming workloads and Prometheus-backed
-      range/instant/summary queries. Every RPC carries a google.api.http annotation, so the same
-      surface is served as REST through grpc-gateway under /v1 (for example POST /v1/gpus,
-      GET /v1/node, POST /v1/monitor/query/range-vector). The contract is the .proto set published in
-      the HAMi-WebUI repository and mirrored verbatim into grpc/ here.
-    humanURL: https://project-hami.io/docs/installation/webui-installation
-    baseURL: http://{hami-webui-host}:8000
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/hami.png
-    tags:
-      - GPU Virtualization
-      - Kubernetes
-      - Observability
-      - Monitoring
-    properties:
-      - type: Protobuf
-        url: grpc/hami-webui-card.proto
-      - type: Protobuf
-        url: grpc/hami-webui-node.proto
-      - type: Protobuf
-        url: grpc/hami-webui-container.proto
-      - type: Protobuf
-        url: grpc/hami-webui-monitor.proto
-      - type: Protobuf
-        url: grpc/hami-webui-error.proto
-      - type: SourceCode
-        url: https://github.com/Project-HAMi/HAMi-WebUI
-      - type: Documentation
-        url: https://project-hami.io/docs/installation/webui-installation
-  - name: HAMi Website Discovery API
-    description: >-
-      The machine-readable discovery surface of the HAMi documentation website, described by a
-      first-party OpenAPI 3.1.0 document that the site advertises as the service-desc of its RFC 9727
-      API catalog. Four anonymous GET endpoints — /robots.txt, /.well-known/api-catalog,
-      /.well-known/agent-skills/index.json and /.well-known/site-status.json — let an agent find the
-      project's content-usage signals, its API catalog, its published Agent Skills, and site status
-      without scraping HTML.
-    humanURL: https://project-hami.io/docs/
-    baseURL: https://project-hami.io
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/hami.png
-    tags:
-      - Discovery
-      - Agents
-      - Documentation
-    properties:
-      - type: OpenAPI
-        url: openapi/hami-website-discovery-openapi.json
-      - type: Overlay
-        url: overlays/hami-website-discovery-overlay.yaml
-      - type: WellKnown
-        url: well-known/hami-well-known.yml
+- name: HAMi WebUI API
+  description: >-
+    The HAMi WebUI backend API. Four gRPC services — Card, Node, Container and Monitor — expose cluster
+    accelerator inventory, node inventory, GPU-consuming workloads and Prometheus-backed range/instant/summary
+    queries. Every RPC carries a google.api.http annotation, so the same surface is served as REST through
+    grpc-gateway under /v1 (for example POST /v1/gpus, GET /v1/node, POST /v1/monitor/query/range-vector).
+    The contract is the .proto set published in the HAMi-WebUI repository and mirrored verbatim into grpc/
+    here.
+  humanURL: https://project-hami.io/docs/installation/webui-installation
+  baseURL: http://{hami-webui-host}:8000
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/hami.png
+  tags:
+  - GPU Virtualization
+  - Kubernetes
+  - Observability
+  - Monitoring
+  properties:
+  - type: Protobuf
+    url: grpc/hami-webui-card.proto
+  - type: Protobuf
+    url: grpc/hami-webui-node.proto
+  - type: Protobuf
+    url: grpc/hami-webui-container.proto
+  - type: Protobuf
+    url: grpc/hami-webui-monitor.proto
+  - type: Protobuf
+    url: grpc/hami-webui-error.proto
+  - type: SourceCode
+    url: https://github.com/Project-HAMi/HAMi-WebUI
+  - type: Documentation
+    url: https://project-hami.io/docs/installation/webui-installation
+- aid: hami:hami-robots-txt-api
+  name: HAMi Robots.txt API
+  description: The Robots.txt API from HAMi — 1 operation(s) for robots.txt.
+  humanURL: https://project-hami.io/docs/installation/webui-installation
+  baseURL: http://{hami-webui-host}:8000
+  tags:
+  - Robots.txt
+  properties:
+  - type: OpenAPI
+    url: openapi/hami-robots-txt-api-openapi.yml
+  - type: WellKnown
+    url: well-known/hami-well-known.yml
+- aid: hami:hami-well-known-api
+  name: HAMi .well Known API
+  description: The .well Known API from HAMi — 3 operation(s) for .well known.
+  humanURL: https://project-hami.io/docs/installation/webui-installation
+  baseURL: http://{hami-webui-host}:8000
+  tags:
+  - .well Known
+  properties:
+  - type: OpenAPI
+    url: openapi/hami-well-known-api-openapi.yml
+  - type: WellKnown
+    url: well-known/hami-well-known.yml
 common:
+  - type: Overlay
+    url: overlays/hami-website-discovery-overlay.yaml
   - type: Website
     url: https://www.project-hami.io/
   - type: GitHubOrganization
