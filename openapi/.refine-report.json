@@ -1,0 +1,28 @@
+{
+  "provider": "hami",
+  "sources": [
+    "_original/hami-website-discovery-openapi.json"
+  ],
+  "outputs": [
+    "hami-well-known-api-openapi.yml",
+    "hami-robots-txt-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "hami-website-discovery-openapi.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "hami-website-discovery-openapi.json: tagged paths GET /robots.txt -> Robots.txt",
+    "hami-website-discovery-openapi.json: tagged paths GET /.well-known/api-catalog -> .well Known",
+    "hami-website-discovery-openapi.json: tagged paths GET /.well-known/agent-skills/index.json -> .well Known",
+    "hami-website-discovery-openapi.json: tagged paths GET /.well-known/site-status.json -> .well Known",
+    "hami-website-discovery-openapi.json: declared missing tag: .well Known",
+    "hami-website-discovery-openapi.json: declared missing tag: Robots.txt",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "hami-robots-txt-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "hami-well-known-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

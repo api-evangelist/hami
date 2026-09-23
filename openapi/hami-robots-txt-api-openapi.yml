@@ -1,0 +1,24 @@
+openapi: 3.2.0
+info:
+  title: HAMi Website Discovery Robots.txt API
+  version: 1.0.0
+  description: Machine-readable discovery endpoints for the HAMi documentation website.
+servers:
+- url: https://project-hami.io
+tags:
+- name: Robots.txt
+paths:
+  /robots.txt:
+    get:
+      summary: Robots exclusion rules and content usage preferences
+      responses:
+        '200':
+          description: robots.txt
+          content:
+            text/plain:
+              schema:
+                type: string
+      tags:
+      - Robots.txt
+      operationId: getRobotsTxt
+      x-operation-id-source: derived

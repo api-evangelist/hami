@@ -1,0 +1,55 @@
+openapi: 3.2.0
+info:
+  title: HAMi Website Discovery .well Known API
+  version: 1.0.0
+  description: Machine-readable discovery endpoints for the HAMi documentation website.
+servers:
+- url: https://project-hami.io
+tags:
+- name: .well Known
+paths:
+  /.well-known/api-catalog:
+    get:
+      summary: API catalog linkset
+      responses:
+        '200':
+          description: RFC 9727 API catalog
+          content:
+            application/linkset+json:
+              schema:
+                type: object
+      tags:
+      - .well Known
+      operationId: getWellKnownApiCatalog
+      x-operation-id-source: derived
+  /.well-known/agent-skills/index.json:
+    get:
+      summary: Agent skills discovery index
+      responses:
+        '200':
+          description: Agent skills discovery document
+          content:
+            application/json:
+              schema:
+                type: object
+      tags:
+      - .well Known
+      operationId: getWellKnownAgentSkillsIndexJson
+      x-operation-id-source: derived
+  /.well-known/site-status.json:
+    get:
+      summary: Website status
+      responses:
+        '200':
+          description: Static status metadata
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+      tags:
+      - .well Known
+      operationId: getWellKnownSiteStatusJson
+      x-operation-id-source: derived
