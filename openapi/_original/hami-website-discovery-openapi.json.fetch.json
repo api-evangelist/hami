@@ -1,0 +1,12 @@
+{
+ "url": "https://project-hami.io/.well-known/openapi.json",
+ "requested_url": "https://project-hami.io/.well-known/openapi.json",
+ "status": 200,
+ "content_type": "application/openapi+json; charset=utf-8",
+ "bytes": 2053,
+ "sha256": "c4753fcc132aab8ef280e72fd608b5eb56765a8cc352a0dfe6fd2aa8770f9269",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the archived file is byte-identical to what the provider serves."
+}
