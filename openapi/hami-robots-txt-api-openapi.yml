@@ -22,3 +22,9 @@ paths:
       - Robots.txt
       operationId: getRobotsTxt
       x-operation-id-source: derived
+x-provenance:
+  method: harvested
+  publisher: HAMi
+  source: https://project-hami.io/.well-known/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
