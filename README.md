@@ -1,4 +1,4 @@
-# HAMI (hami)
+# HAMi
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,32 +64,122 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-HAMI (Heterogeneous AI Computing Virtualization Middleware) is an open-source project that enables GPU virtualization and sharing for Kubernetes workloads, allowing multiple AI containers to share GPU resources efficiently.
+HAMi (Heterogeneous AI Computing Virtualization Middleware) is a CNCF incubating open-source project that brings device sharing, memory and core isolation, and topology-aware scheduling to heterogeneous AI accelerators on Kubernetes. It lets several containers share one physical GPU or NPU with hard memory limits and enforced compute quotas, across NVIDIA, Huawei Ascend, Cambricon MLU, Hygon DCU, Enflame GCU, Iluvatar, Moore Threads, MetaX, Kunlunxin and Vastai devices. HAMi ships a scheduler, a device plugin, an in-container enforcement library (HAMi-core/libvgpu), a DRA driver, and HAMi WebUI — an observability dashboard whose backend exposes a gRPC and grpc-gateway REST API over cluster GPU, node, workload and Prometheus-backed monitoring data. The project also publishes a machine-readable discovery surface on its documentation site: an RFC 9727 API catalog, an OpenAPI 3.1 service description, an Agent Skills discovery index, and Content-Signal directives in robots.txt.
 
-**URL:** [Visit APIs.json URL](https://raw.githubusercontent.com/api-evangelist/hami/refs/heads/main/apis.yml)
+**Areas:** AI Computing · CNCF · GPU Virtualization · Kubernetes · GPU Sharing · Scheduling · Open Source · Infrastructure · Observability · Heterogeneous Computing
 
-## Scope
+## HAMi on APIs.io
 
-- **Type:** Index 
-- **Position:** Consuming 
-- **Access:** 3rd-Party 
+Everything profiled for HAMi is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/hami/](https://apis.io/providers/hami/)** — or go straight to one of the APIs or properties below.
 
-## Tags:
+### APIs (3)
 
- - GPU Virtualization, Kubernetes, AI Computing, CNCF
+- [HAMi WebUI API](https://apis.io/apis/hami/hami-webui-api/) — The HAMi WebUI backend API. Four gRPC services — Card, Node, Container and Monitor — expose cluster accelerator inventory, node inventory, GPU-consuming…
+- [HAMi Robots.txt API](https://apis.io/apis/hami/hami-robots-txt-api/) — The Robots.txt API from HAMi — 1 operation(s) for robots.txt.
+- [HAMi .well Known API](https://apis.io/apis/hami/hami-well-known-api/) — The .well Known API from HAMi — 3 operation(s) for .well known.
 
-## Timestamps
+### Published properties
 
-- **Created:** 2025 
-- **Modified:** 2026-04-28 
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## Common Properties
+#### MCP servers (1)
 
-- [GitHub Organization](https://github.com/Project-HAMi/HAMi)
+Model Context Protocol servers that expose the API to agents.
+
+- [hami-mcp.yml](https://apis.io/servers/hami/hami-mcp-yml/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Hami Website Discovery Overlay](https://apis.io/overlays/hami/hami-website-discovery-overlay/)
+
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Hami Authentication](https://apis.io/security/hami/hami-authentication/)
+- [Hami Domain Security](https://apis.io/security/hami/hami-domain-security/)
+- [Hami Vulnerability Disclosure](https://apis.io/security/hami/hami-vulnerability-disclosure/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Hami Plans Pricing](https://apis.io/plans/hami/hami-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Hami Rate Limits](https://apis.io/rate-limits/hami/hami-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.project-hami.io/)
 - [Documentation](https://project-hami.io/docs/)
+- [Getting started](https://project-hami.io/docs/get-started/deploy-with-helm)
+- [Support](https://project-hami.io/community)
+- [Changelog](https://project-hami.io/changelog)
+- [Blog](https://project-hami.io/blog/rss.xml)
+- [Security](https://github.com/Project-HAMi/HAMi/blob/master/SECURITY.md)
+- [Terms of service](https://lfprojects.org/policies/terms-of-use/)
+- [Privacy policy](https://lfprojects.org/policies/privacy-policy/)
+- [GitHub](https://github.com/Project-HAMi/HAMi)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
+**Kin Score 40.8** — developing · rubric 0.25.0 · scored 2026-10-23
 
-**Email:** kin@apievangelist.com
+| Facet | Score |
+|---|---|
+| Discoverability | 66.1 |
+| Contract quality | 38.6 |
+| Contract governance | 18.2 |
+| Operational transparency | 34.2 |
+| Developer ergonomics | 57.1 |
+| Access clarity | 21.1 |
+
+**Agent readiness 32.9** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | na |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | na |
+| Error Semantics | derived (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | yes |
+| Well Known Catalog | yes |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | na |
+| Delegated Identity | — |
+| Protected Resource Metadata | documented (partial credit) |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 30.4** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/hami/](https://apis.io/providers/hami/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for HAMi: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/hami/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
